@@ -2,30 +2,37 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UserModel = require("../Models/User");
 
-const signup=async(req,res)=>{
-    try{
-        const {name,email,password}=req.body;
-        const user=await UserModel.findOne({email});
-        if(user){
-            return res.status(409)
-               .json({message:'User is already exist, you can login', success:false});
-        }
-        const userModel=new userModel({name,email,password});
-        userModel.password=await bcrypt.hash(password,10);
-        await userModel.save();
-        res.status(201)
-           .json({
-            message:"SignUp Successful",
-            success:true
-           })
-    }catch(err){
-        res.status(500)
-          .json({
-            message:"Internal Server Error",
-            Success: false
-          })
+const signup = async (req, res) => {
+    try {
+      const { name, email, password } = req.body;
+  
+      // Check if user already exists
+      const user = await UserModel.findOne({ email });
+      if (user) {
+        return res.status(409).json({
+          message: 'User already exists, you can login',
+          success: false
+        });
+      }
+  
+      // Create new user and hash password
+      const newUser = new UserModel({ name, email });
+      newUser.password = await bcrypt.hash(password, 10);
+      await newUser.save();
+  
+      res.status(201).json({
+        message: "SignUp Successful",
+        success: true
+      });
+    } catch (err) {
+      console.error("Signup error:", err); // helpful during dev
+      res.status(500).json({
+        message: "Internal Server Error",
+        success: false
+      });
     }
-};
+  };
+  
 
 const login = async (req, res) => {
     try {

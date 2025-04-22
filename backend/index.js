@@ -7,7 +7,7 @@ const cors = require('cors');
 const AuthRouter = require('./Routes/AuthRouter');
 const productRouter = require('./Routes/productRouter');
 
-const port =  3000; // Make sure your .env uses PORT (not lowercase)
+const port =  5000; // Make sure your .env uses PORT (not lowercase)
  
 app.use(cors());
 app.use(bodyParser.json());
